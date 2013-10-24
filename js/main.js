@@ -221,7 +221,6 @@ $(function() {
         game.currentPlayer = game.p0;
         game.keyHolderElem(game.p0).empty();
         game.keyHolderElem(game.p1).empty();
-        game.round = 1;
         game.timePerRound = 5000;
         game.roundStartTime = game.time();
         game.startTime = game.time();
@@ -251,7 +250,9 @@ $(function() {
             $('#gameover').css('color', game.playerColors[winnerId]);
         }
         
-        var text = winnerText + ' after ' + timePlayed + ' seconds ' + 'and the scores: ' + game.playerScores;
+        var strokesPerSecond = (game.playerScores[0] + game.playerScores[1]) / timePlayed;
+        strokesPerSecond = Math.round(strokesPerSecond * 10) / 10;
+        var text = winnerText + ' after ' + timePlayed + ' seconds ' + 'and the scores: ' + game.playerScores + " that's " + strokesPerSecond + " keys per second.";
         $('#results').text(text);
     }
     
