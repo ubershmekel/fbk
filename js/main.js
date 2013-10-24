@@ -187,6 +187,9 @@ $(function() {
     
     game.registerKeys = function() {
         $(window).keypress(function(e) {
+            if(game.stateName != 'play') {
+                return;
+            }
             var key = e.which;
             //console.log(key);
             if(game.playerKeys[game.currentPlayer][key] == game.taken) {
@@ -221,6 +224,7 @@ $(function() {
         game.round = 1;
         game.timePerRound = 5000;
         game.roundStartTime = game.time();
+        game.startTime = game.time();
         game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
     }
     
@@ -228,6 +232,27 @@ $(function() {
         game.stateChange('gameover');
         clearInterval(game.intervalId);
         game.intervalId = undefined;
+        
+        var timePlayed = (game.time() - game.startTime) / 1000;
+        var winnerText;
+        var winnerId = undefined;
+        if (game.playerScores[game.p0] > game.playerScores[game.p1]) {
+            winnerId = game.p0;
+        } else if (game.playerScores[game.p0] < game.playerScores[game.p1]) {
+            winnerId = game.p1;
+            
+        }
+        
+        if(winnerId == undefined) {
+            winnerText = 'a tie';
+            $('#gameover').css('color', '#000');
+        } else {
+            winnerText = game.playerNames[winnerId] + ' won';
+            $('#gameover').css('color', game.playerColors[winnerId]);
+        }
+        
+        var text = winnerText + ' after ' + timePlayed + ' seconds ' + 'and the scores: ' + game.playerScores;
+        $('#results').text(text);
     }
     
     game.main = function() {
