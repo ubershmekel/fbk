@@ -3,6 +3,118 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
+var KEY_TO_MAT = [
+55,
+56,
+33,
+53,
+51,
+52,
+49,
+50,
+48,
+57,
+0, // F18
+0, // F19
+109,
+106,
+0, // F16
+0, // F17
+105,
+27, // clear
+0, // NP =
+111,
+54,
+78,
+188,
+77,
+190,
+191,
+83,
+65,
+20,
+192,
+8,
+187,
+189,
+113,
+114,
+67,
+27,
+38,
+110,
+96,
+107,
+13,
+102,
+101,
+100,
+99,
+98,
+97,
+116,
+72,
+75,
+68,
+71,
+74,
+76,
+222,
+70,
+90,
+88,
+86,
+16,
+80,
+79,
+16,
+13,
+40,
+85,
+73,
+115,
+39,
+123,
+0, // eject
+122,
+121,
+119,
+120,
+118,
+117,
+17,
+37,
+224,
+18,
+224,
+32,
+17,
+0, // f13
+17,
+9,
+220,
+81,
+219,
+221,
+87,
+84,
+89,
+186,
+69,
+0, // F15,
+0, // F14,
+35,
+46,
+45, // Fn changed to insert
+34,
+112,
+36,
+104,
+103,
+66,
+82
+];
+
 // FUNCS
 
 if ( ! Detector.webgl ) {
@@ -14,7 +126,7 @@ if ( ! Detector.webgl ) {
 
 var renderer, scene, camera;
 
-function init3D(){
+function init3D(game){
     // set the scene size
     var WIDTH = window.innerWidth,
         HEIGHT = window.innerHeight;
@@ -86,13 +198,19 @@ function init3D(){
     
     var loader = new THREE.JSONLoader( manager );
     loader.load( 'obj/keyboard.js', function ( geometry, materials ) {
-
-        mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({map: texture}));
+    
+        for (var i = 0; i < materials.length; i++){
+            materials[i].map = texture;
+        }
+    
+        var faceMaterial = new THREE.MeshFaceMaterial(materials);
+    
+        game.mesh = new THREE.Mesh(geometry, faceMaterial);
         
-        mesh.scale.set(30, 30, 30);
-        mesh.rotation.set(Math.PI / 2, 0, 0);
+        game.mesh.scale.set(30, 30, 30);
+        game.mesh.rotation.set(Math.PI * 0.25, 0, 0);
         
-        scene.add(mesh);
+        scene.add(game.mesh);
 
     } );
     
@@ -110,8 +228,6 @@ function render() {
 }
 
 $(function() {
-    
-    init3D();
        
     var game = {};
     game.playerKeys = [{}, {}];
@@ -123,10 +239,15 @@ $(function() {
     game.playerNames[game.p0]= 'Player Left';
     game.playerNames[game.p1]= 'Player Right';
     game.playerColors = {};
-    game.playerColors[game.p0] = '#00f';
-    game.playerColors[game.p1] = '#f00';     
+    game.playerColors[game.p0] = '#E8C9AD';
+    game.playerColors[game.p1] = '#9CC6C3';     
+    game.playerColorsRGB = {};
+    game.playerColorsRGB[game.p0] = [232/255, 201/255, 173/255];
+    game.playerColorsRGB[game.p1] = [156/255, 198/255, 195/255];
     
-    game.play_mode = PLAY_MODE_HOLD_TO_CAPTURE;
+    game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
+    
+    init3D(game);
     
     game.pidToStr = function(pid) {
         return "p" + pid;
@@ -195,6 +316,19 @@ $(function() {
         game.updateViz();
     }
     
+    game.colorKey = function(key, color){
+        console.log(key);
+        game.mesh.material.materials[KEY_TO_MAT.indexOf(key)].color.setRGB(color[0], color[1], color[2]);
+    }
+    
+    game.turnOnColor = function(player, key){
+        game.colorKey(key, game.playerColorsRGB[player]);
+    }
+    
+    game.turnOffColor = function(key){
+        game.colorKey(key, [1,1,1]);
+    }
+        
     game.registerKeys = function() {
         $(window).keydown(function(e) {
             if(game.stateName != 'play') {
@@ -213,6 +347,8 @@ $(function() {
             }
                 
             game.addKey(game.currentPlayer, key);
+            game.turnOnColor(game.currentPlayer, key);
+            
                 
         });
         $(window).keyup(function(e) {
@@ -223,6 +359,7 @@ $(function() {
             var key = e.which;
             
             game.removeKey(game.currentPlayer, key);
+            game.turnOffColor(key);
         });
     }
     
