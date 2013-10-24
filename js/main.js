@@ -1,4 +1,10 @@
 
+// CONSTS
+var PLAY_MODE_CLICK_TO_CAPTURE = 0;
+var PLAY_MODE_HOLD_TO_CAPTURE = 1;
+
+// FUNCS
+
 if ( ! Detector.webgl ) {
 
     Detector.addGetWebGLMessage();
@@ -10,8 +16,8 @@ var renderer, scene, camera;
 
 function init3D(){
     // set the scene size
-    var WIDTH = 400,
-        HEIGHT = 300;
+    var WIDTH = window.innerWidth,
+        HEIGHT = window.innerHeight;
 
     // set some camera attributes
     var VIEW_ANGLE = 45,
@@ -48,44 +54,47 @@ function init3D(){
     // attach the render-supplied DOM element
     $container.append(renderer.domElement);
     
-    var ambientLight = new THREE.AmbientLight( 0xcccccc );
-    scene.add( ambientLight );
+    // create a point light
+    var pointLight =
+      new THREE.PointLight(0xFFFFFF);
+
+    // set its position
+    pointLight.position.x = 10;
+    pointLight.position.y = 50;
+    pointLight.position.z = 130;
+
+    // add to the scene
+    scene.add(pointLight);
     
-    var loader = new THREE.JSONLoader();
-    loader.load("js/untitled.js", function(geom){ 
-        console.log(geom);
-        var mesh = new THREE.Mesh( geom, new THREE.MeshLambertMaterial(
-        {
-          color: 0xCC0000
-        }) );
-        scene.add(mesh);
-    });
+    var manager = new THREE.LoadingManager();
+    manager.onProgress = function ( item, loaded, total ) {
+
+        console.log( item, loaded, total );
+
+    };
     
-    // create the sphere's material
-    var sphereMaterial =
-      new THREE.MeshLambertMaterial(
-        {
-          color: 0xCC0000
-        }); 
+    var texture = new THREE.Texture();
+    
+    var loader = new THREE.ImageLoader( manager );
+    loader.load( 'obj/KEYBOARD_Letters.PNG', function ( image ) {
+
+        texture.image = image;
+        texture.needsUpdate = true;
+
+    } );
+    
+    
+    var loader = new THREE.JSONLoader( manager );
+    loader.load( 'obj/keyboard.js', function ( geometry, materials ) {
+
+        mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({map: texture}));
         
-    var radius = 50,
-        segments = 16,
-        rings = 16;
+        mesh.scale.set(30, 30, 30);
+        mesh.rotation.set(Math.PI / 2, 0, 0);
+        
+        scene.add(mesh);
 
-    // create a new mesh with
-    // sphere geometry - we will cover
-    // the sphereMaterial next!
-    var sphere = new THREE.Mesh(
-
-      new THREE.SphereGeometry(
-        radius,
-        segments,
-        rings),
-
-      sphereMaterial);
-
-    // add the sphere to the scene
-    //scene.add(sphere);
+    } );
     
     animate();
 }
@@ -103,7 +112,7 @@ function render() {
 $(function() {
     
     init3D();
-    
+       
     var game = {};
     game.playerKeys = [{}, {}];
     game.taken = 't';
@@ -115,7 +124,9 @@ $(function() {
     game.playerNames[game.p1]= 'Player Right';
     game.playerColors = {};
     game.playerColors[game.p0] = '#00f';
-    game.playerColors[game.p1] = '#f00';
+    game.playerColors[game.p1] = '#f00';     
+    
+    game.play_mode = PLAY_MODE_HOLD_TO_CAPTURE;
     
     game.pidToStr = function(pid) {
         return "p" + pid;
@@ -160,7 +171,7 @@ $(function() {
     
     game.updateViz = function() {
         var curp = $('#currentPlayer');
-        curp.text(game.playerNames[game.currentPlayer] + ' ' + game.roundTimeLeft);
+        curp.text(game.playerNames[game.currentPlayer] + ' ' + Math.floor(game.roundTimeLeft / 1000) + '.' + game.roundTimeLeft % 1000);
         curp.css('color', game.playerColors[game.currentPlayer]);
         game.updateScore(game.p0);
         game.updateScore(game.p1);
@@ -184,9 +195,8 @@ $(function() {
         game.updateViz();
     }
     
-    
     game.registerKeys = function() {
-        $(window).keypress(function(e) {
+        $(window).keydown(function(e) {
             if(game.stateName != 'play') {
                 return;
             }
@@ -196,22 +206,33 @@ $(function() {
                 // TODO: play wasted key sound
                 return;
             }
-            if(game.playerKeys[game.otherPlayer()][key] == game.taken) {
+            
+            if (game.playerKeys[game.otherPlayer()][key] == game.taken) {
                 // TODO: play conquer key sound
                 game.removeKey(game.otherPlayer(), key);
             }
-            
+                
             game.addKey(game.currentPlayer, key);
+                
+        });
+        $(window).keyup(function(e) {
+            if (game.stateName != 'play' || game.play_mode != PLAY_MODE_HOLD_TO_CAPTURE){
+                return;
+            }
+            
+            var key = e.which;
+            
+            game.removeKey(game.currentPlayer, key);
         });
     }
     
     game.stateChange = function(stateName) {
         if (game.stateDiv != undefined) {
-            game.stateDiv.css('display', 'none');
+            game.stateDiv.hide();
         }
         game.stateName = stateName;
         game.stateDiv = $('#' + stateName);
-        game.stateDiv.css('display', 'block');
+        game.stateDiv.show();
     }
     
     game.newGame = function() {
