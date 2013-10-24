@@ -125,6 +125,10 @@ $(function() {
         return (game.currentPlayer + 1) % 2;
     }
     
+    game.time = function() {
+        return new Date().getTime();
+    }
+    
     game.removeKey = function(pid, key) {
         delete game.playerKeys[pid][key];
         var elemName = game.pidToStr(pid) + 'key' + key;
@@ -138,6 +142,7 @@ $(function() {
     
     game.addKey = function(pid, key) {
         game.playerKeys[pid][key] = game.taken;
+        game.playerScores[pid] += 1;
         
         var elemName = game.pidToStr(pid) + 'key' + key;
         var elem = $('<div/>', {
@@ -149,27 +154,41 @@ $(function() {
         game.keyHolderElem(pid).append(elem);
     }
 
+    game.updateScore = function(pid) {
+        $('#p' + pid + 'score').text(game.playerScores[pid]);
+    }
+    
     game.updateViz = function() {
-        $('#currentPlayer').text(game.playerNames[game.currentPlayer]).css('color', game.playerColors[game.currentPlayer]);
-        
+        var curp = $('#currentPlayer');
+        curp.text(game.playerNames[game.currentPlayer] + ' ' + game.roundTimeLeft);
+        curp.css('color', game.playerColors[game.currentPlayer]);
+        game.updateScore(game.p0);
+        game.updateScore(game.p1);
     }
     
-    game.nextTurn = function() {
-        game.currentPlayer = game.otherPlayer();
+    game.update = function() {
+        var time = game.time();
+        game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
+        if(game.roundTimeLeft <= 0) {
+            // next round
+            if(game.currentPlayer == game.p1) {
+                game.timePerRound = game.timePerRound - 1000;
+            }
+            if(game.timePerRound == 0) {
+                game.endGame();
+            }
+            game.roundStartTime = time;
+            game.currentPlayer = game.otherPlayer();
+        }
+        
         game.updateViz();
-        
-        game.queueTurn();
-    }
-    
-    game.queueTurn = function() {
-       setTimeout(game.nextTurn, 2000);
     }
     
     
     game.registerKeys = function() {
         $(window).keypress(function(e) {
             var key = e.which;
-            console.log(key);
+            //console.log(key);
             if(game.playerKeys[game.currentPlayer][key] == game.taken) {
                 // TODO: play wasted key sound
                 return;
@@ -184,29 +203,37 @@ $(function() {
     }
     
     game.stateChange = function(stateName) {
-        if (game.state != undefined) {
-            game.state.css('display', 'none');
+        if (game.stateDiv != undefined) {
+            game.stateDiv.css('display', 'none');
         }
-        game.state = $('#' + stateName);
-        game.state.css('display', 'block');
+        game.stateName = stateName;
+        game.stateDiv = $('#' + stateName);
+        game.stateDiv.css('display', 'block');
     }
     
     game.newGame = function() {
         game.stateChange('play');
         game.playerKeys = [{}, {}];
+        game.playerScores = [0, 0];
         game.currentPlayer = game.p0;
         game.keyHolderElem(game.p0).empty();
         game.keyHolderElem(game.p1).empty();
         game.round = 1;
-        game.timeLeft = 5;
+        game.timePerRound = 5000;
+        game.roundStartTime = game.time();
+        game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
+    }
+    
+    game.endGame = function() {
+        game.stateChange('gameover');
+        clearInterval(game.intervalId);
+        game.intervalId = undefined;
     }
     
     game.main = function() {
         game.stateChange('intro');
         $('#startButton').click(function(){game.newGame();});
         game.registerKeys();
-        game.updateViz();
-        game.queueTurn();
     }
    
     game.main();
