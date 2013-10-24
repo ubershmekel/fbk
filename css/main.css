@@ -310,21 +310,23 @@ textarea {
    ========================================================================== */
 
 #p0keys, .leftStatus {
-	float: left;
-	color: #00f;
+    float: left;
+    color: #00f;
 }
 
 #p1keys, .rightStatus {
-	color: #f00;
-	float: right;
+    color: #f00;
+    float: right;
 }
 
 .gameStatus {
-	width: 20em;
-	margin: auto;
+    width: 20em;
+    margin: auto;
 }
 
-#play {
-	padding: 20px;
+.gameState {
+    display: none;
+    padding: 20px;
+    text-align: center;
 }
 

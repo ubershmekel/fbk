@@ -21,39 +21,55 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-		
-		
-		<div id="container"></div>
-		
-		
-		
-		
-		
-		
+        
+        
+        <div id="container"></div>
+        
+        
+        
+        
+        
+        
         <!-- Add your site or application content here -->
-		<div id="play">
-			<div class="leftStatus">
-				<h2>Player Left</h2>
-				<div id="p0score">0</div>
-			</div>
-			
-			<div class="rightStatus">
-				<h2>Player Right</h2>
-				<div id="p1score">0</div>
-			</div>
-			
-			<div class="gameStatus">
-				<h2 id="currentPlayer"></h2>
-				
-				<h2>Conquered</h2>
-				<div id="p0keys"></div>
-				<div id="p1keys"></div>
-			</div>
-		</div>
-		
-		
-		
-		
+        
+        <div id="intro" class="gameState">
+            <h1>Break Keyboards With Friends</h1>
+            <p>2 players battle it out to conquer the keyboard</p>
+            <strong>DO NOT PLAY THIS ALONE</strong>
+            <p>When it's your turn, hit as many keys as possible to conquer them.</p>
+            <p>Steal your opponents territory, and avoid helping him when it's his turn (there's no pause between turns...)</p>
+            <button id="startButton">Start</button>
+        </div>
+        
+        
+        
+        
+        <div id="play" class="gameState">
+            <div class="leftStatus">
+                <h2>Player Left</h2>
+                <div id="p0score">0</div>
+            </div>
+            
+            <div class="rightStatus">
+                <h2>Player Right</h2>
+                <div id="p1score">0</div>
+            </div>
+            
+            <div class="gameStatus">
+                <h2 id="currentPlayer"></h2>
+                
+                <h2>Conquered</h2>
+                <div id="p0keys"></div>
+                <div id="p1keys"></div>
+            </div>
+        </div>
+        
+        
+        <div id="gameover" class="gameState">
+        </div>
+        
+        
+        
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
@@ -63,18 +79,18 @@
         <script src="js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-		<script type="text/javascript">
+        <script type="text/javascript">
 
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-4533496-16']);
-		  _gaq.push(['_trackPageview']);
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-4533496-16']);
+          _gaq.push(['_trackPageview']);
 
-		  (function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
 
-		</script>
+        </script>
     </body>
 </html>
