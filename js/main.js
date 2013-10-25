@@ -264,7 +264,7 @@ $(function() {
     game.removeKey = function(pid, key) {
         delete game.playerKeys[pid][key];
         var elemName = game.pidToStr(pid) + 'key' + key;
-        $('#' + elemName).remove();
+        //$('#' + elemName).remove();
     }
 
     game.keyHolderElem = function(pid) {
@@ -277,13 +277,13 @@ $(function() {
         game.playerScores[pid] += 1;
         
         var elemName = game.pidToStr(pid) + 'key' + key;
-        var elem = $('<div/>', {
+        /*var elem = $('<div/>', {
             text: key,
             id: elemName
             });
         
         
-        game.keyHolderElem(pid).append(elem);
+        game.keyHolderElem(pid).append(elem);*/
     }
 
     game.updateScore = function(pid) {

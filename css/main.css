@@ -309,6 +309,11 @@ textarea {
    Yuval's custom styles
    ========================================================================== */
 
+body {
+    /* no scroll bars please */
+    overflow: hidden;
+}
+
 #p0keys, .leftStatus {
     float: left;
     color: #00f;
@@ -328,5 +333,8 @@ textarea {
     display: none;
     padding: 20px;
     text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
