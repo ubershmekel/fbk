@@ -247,8 +247,6 @@ $(function() {
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
-    init3D(game);
-    
     game.pidToStr = function(pid) {
         return "p" + pid;
     }
@@ -415,6 +413,7 @@ $(function() {
     }
     
     game.main = function() {
+        init3D(game);
         game.stateChange('intro');
         $('#startButton').click(function(){game.newGame();});
         game.registerKeys();
