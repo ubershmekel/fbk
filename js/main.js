@@ -309,9 +309,14 @@ $(function() {
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
         if(game.roundTimeLeft <= 0) {
             $("#beep_snd")[0].play();
+                                 
             // next round
             if(game.currentPlayer == game.p1) {
-                game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT
+                game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT;
+                game.mesh.rotation.set(Math.PI * 0.25, 0.01, 0);
+            }
+            else {
+                game.mesh.rotation.set(Math.PI * 0.25, -0.01, 0);
             }
             if(game.timePerRound <= 0) {
                 game.endGame();
