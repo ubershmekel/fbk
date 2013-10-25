@@ -127,6 +127,26 @@ if ( ! Detector.webgl ) {
 
 }
 
+var x;
+function captureVideo(){
+    var onFailSoHard = function(e) {
+    console.log('Reeeejected!', e);
+  };
+
+  // Not showing vendor prefixes.
+  navigator.webkitGetUserMedia({video: true}, function(localMediaStream) {
+    var video = document.querySelector('video');
+    x = localMediaStream;
+    video.src = window.URL.createObjectURL(localMediaStream);
+
+    // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+    // See crbug.com/110938.
+    video.onloadedmetadata = function(e) {
+      // Ready to go. Do some stuff.
+    };
+  }, onFailSoHard);
+}
+
 var renderer, scene, camera;
 
 function init3D(game){
@@ -231,6 +251,8 @@ function render() {
 }
 
 $(function() {
+    
+    captureVideo();
        
     var game = {};
     game.playerKeys = [{}, {}];
@@ -436,6 +458,11 @@ $(function() {
         var text = winnerText + '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
                    '<p>Scores: ' + game.playerScores.join(', ') + "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
         $('#results').html(text);
+        
+        var mediaElement = $("video")[0];
+        mediaElement.pause(); 
+        mediaElement.currentTime = 0;
+        mediaElement.play();
     }
     
     game.main = function() {
