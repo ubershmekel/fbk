@@ -326,6 +326,13 @@ $(function() {
     game.turnOffColor = function(key){
         game.colorKey(key, [1,1,1]);
     }
+    
+    game.resetColorKeys = function() {
+        for(var i = 0; i < KEY_TO_MAT.length; i++) {
+            // TODO: maybe there's a smarter way to do this without double look up?
+            game.turnOffColor(KEY_TO_MAT[i]);
+        }
+    }
         
     game.registerKeys = function() {
         $(window).keydown(function(e) {
@@ -372,6 +379,7 @@ $(function() {
     
     game.newGame = function() {
         game.stateChange('play');
+        game.resetColorKeys();
         game.playerKeys = [{}, {}];
         game.playerScores = [0, 0];
         game.currentPlayer = game.p0;
@@ -415,7 +423,7 @@ $(function() {
     game.main = function() {
         init3D(game);
         game.stateChange('intro');
-        $('#startButton').click(function(){game.newGame();});
+        $('.startButton').click(function(){game.newGame();});
         game.registerKeys();
     }
    
