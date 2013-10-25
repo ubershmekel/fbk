@@ -3,6 +3,9 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
+var TIME_PER_ROUND = 2000;
+var ROUND_TIME_REDUCEMENT = 300;
+
 var KEY_TO_MAT = [
 55,
 56,
@@ -239,11 +242,11 @@ $(function() {
     game.playerNames[game.p0]= 'Player Left';
     game.playerNames[game.p1]= 'Player Right';
     game.playerColors = {};
-    game.playerColors[game.p0] = '#E8C9AD';
-    game.playerColors[game.p1] = '#9CC6C3';
+    game.playerColors[game.p0] = '#CE7898';
+    game.playerColors[game.p1] = '#98C5AB';
     game.playerColorsRGB = {};
-    game.playerColorsRGB[game.p0] = [232/255, 201/255, 173/255];
-    game.playerColorsRGB[game.p1] = [156/255, 198/255, 195/255];
+    game.playerColorsRGB[game.p0] = [206/255, 120/255, 152/255];
+    game.playerColorsRGB[game.p1] = [152/255, 197/255, 171/255];
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
@@ -305,11 +308,12 @@ $(function() {
         var time = game.time();
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
         if(game.roundTimeLeft <= 0) {
+            $("#beep_snd")[0].play();
             // next round
             if(game.currentPlayer == game.p1) {
-                game.timePerRound = game.timePerRound - 1000;
+                game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT
             }
-            if(game.timePerRound == 0) {
+            if(game.timePerRound <= 0) {
                 game.endGame();
             }
             game.roundStartTime = time;
@@ -320,8 +324,11 @@ $(function() {
     }
     
     game.colorKey = function(key, color){
-        console.log(key);
-        game.mesh.material.materials[KEY_TO_MAT.indexOf(key)].color.setRGB(color[0], color[1], color[2]);
+        for (var i = 0; i < KEY_TO_MAT.length; i++){
+            if (KEY_TO_MAT[i] == key){
+                game.mesh.material.materials[i].color.setRGB(color[0], color[1], color[2]);
+            }
+        }
     }
     
     game.turnOnColor = function(player, key){
@@ -390,7 +397,7 @@ $(function() {
         game.currentPlayer = game.p0;
         game.keyHolderElem(game.p0).empty();
         game.keyHolderElem(game.p1).empty();
-        game.timePerRound = 5000;
+        game.timePerRound = TIME_PER_ROUND;
         game.roundStartTime = game.time();
         game.startTime = game.time();
         game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
@@ -412,17 +419,18 @@ $(function() {
         }
         
         if(winnerId == undefined) {
-            winnerText = 'a tie';
+            winnerText = '<h3>A Tie</h3>';
             $('#gameover').css('color', '#fff');
         } else {
-            winnerText = game.playerNames[winnerId] + ' won';
+            winnerText = '<h3>' + game.playerNames[winnerId] + ' won!</h3>';
             $('#gameover').css('color', game.playerColors[winnerId]);
         }
         
         var strokesPerSecond = (game.playerScores[0] + game.playerScores[1]) / timePlayed;
         strokesPerSecond = Math.round(strokesPerSecond * 10) / 10;
-        var text = winnerText + ' after ' + timePlayed + ' seconds ' + 'and the scores: ' + game.playerScores + " that's " + strokesPerSecond + " keys per second.";
-        $('#results').text(text);
+        var text = winnerText + '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
+                   '<p>Scores: ' + game.playerScores.join(', ') + "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
+        $('#results').html(text);
     }
     
     game.main = function() {

@@ -327,11 +327,11 @@ body {
     left: 0;
     top: 0;
     padding: 10px;
-    color: #E8C9AD;
+    color: #CE7898;
 }
 
 .rightStatus {
-    color: #9CC6C3;
+    color: #98C5AB;
     position: fixed;
     top: 0;
     right: 0;
@@ -359,7 +359,50 @@ body {
 }
 
 button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c579ff), color-stop(1, #a341ee) );
+	background:-moz-linear-gradient( center top, #c579ff 5%, #a341ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c579ff', endColorstr='#a341ee');
+	background-color:#c579ff;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:1px solid #a946f5;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:65px;
+	line-height:65px;
+	width:131px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #8628ce;
     margin: 10px;
+}
+button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #a341ee), color-stop(1, #c579ff) );
+	background:-moz-linear-gradient( center top, #a341ee 5%, #c579ff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#a341ee', endColorstr='#c579ff');
+	background-color:#a341ee;
+}
+button:active {
+	position:relative;
+	top:1px;
 }
 
 
@@ -371,7 +414,7 @@ button {
 /* left arrow */
 .arrowp0 {
     position: relative;
-    background: #E8C9AD;
+    background: #CE7898;
 }
 .arrowp0:after {
     right: 100%;
@@ -384,7 +427,7 @@ button {
 }
 
 .arrowp0:after {
-    border-right-color: #E8C9AD;
+    border-right-color: #CE7898;
     border-width: 30px;
     top: 50%;
     margin-top: -30px;
@@ -393,7 +436,7 @@ button {
 /* right arrow */
 .arrowp1 {
     position: relative;
-    background: #9CC6C3;
+    background: #98C5AB;
 }
 .arrowp1:after {
     left: 100%;
@@ -406,7 +449,7 @@ button {
 }
 
 .arrowp1:after {
-    border-left-color: #9CC6C3;
+    border-left-color: #98C5AB;
     border-width: 30px;
     top: 50%;
     margin-top: -30px;
