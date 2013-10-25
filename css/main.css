@@ -327,11 +327,11 @@ body {
     left: 0;
     top: 0;
     padding: 10px;
-    color: #00f;
+    color: #E8C9AD;
 }
 
 .rightStatus {
-    color: #f00;
+    color: #9CC6C3;
     position: fixed;
     top: 0;
     right: 0;
@@ -362,3 +362,52 @@ button {
     margin: 10px;
 }
 
+
+
+
+
+
+
+/* left arrow */
+.arrowp0 {
+    position: relative;
+    background: #E8C9AD;
+}
+.arrowp0:after {
+    right: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.arrowp0:after {
+    border-right-color: #E8C9AD;
+    border-width: 30px;
+    top: 50%;
+    margin-top: -30px;
+}
+
+/* right arrow */
+.arrowp1 {
+    position: relative;
+    background: #9CC6C3;
+}
+.arrowp1:after {
+    left: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.arrowp1:after {
+    border-left-color: #9CC6C3;
+    border-width: 30px;
+    top: 50%;
+    margin-top: -30px;
+}

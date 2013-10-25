@@ -240,7 +240,7 @@ $(function() {
     game.playerNames[game.p1]= 'Player Right';
     game.playerColors = {};
     game.playerColors[game.p0] = '#E8C9AD';
-    game.playerColors[game.p1] = '#9CC6C3';     
+    game.playerColors[game.p1] = '#9CC6C3';
     game.playerColorsRGB = {};
     game.playerColorsRGB[game.p0] = [232/255, 201/255, 173/255];
     game.playerColorsRGB[game.p1] = [156/255, 198/255, 195/255];
@@ -290,8 +290,13 @@ $(function() {
     
     game.updateViz = function() {
         var curp = $('#currentPlayer');
-        curp.text(game.playerNames[game.currentPlayer] + ' ' + Math.floor(game.roundTimeLeft / 1000) + '.' + game.roundTimeLeft % 1000);
-        curp.css('color', game.playerColors[game.currentPlayer]);
+        curp.text(game.playerNames[game.currentPlayer] + ' ' + (game.roundTimeLeft / 1000.0).toFixed(2));
+        //curp.text((game.roundTimeLeft / 1000.0).toFixed(2));
+        //curp.css('color', game.playerColors[game.currentPlayer]);
+        
+        curp.removeClass();
+        curp.addClass('arrowp' + game.currentPlayer);
+        
         game.updateScore(game.p0);
         game.updateScore(game.p1);
     }
@@ -408,7 +413,7 @@ $(function() {
         
         if(winnerId == undefined) {
             winnerText = 'a tie';
-            $('#gameover').css('color', '#000');
+            $('#gameover').css('color', '#fff');
         } else {
             winnerText = game.playerNames[winnerId] + ' won';
             $('#gameover').css('color', game.playerColors[winnerId]);
