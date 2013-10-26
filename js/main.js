@@ -3,8 +3,10 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
-var TIME_PER_ROUND = 2000;
-var ROUND_TIME_REDUCEMENT = 300;
+var TIME_PER_ROUND = 3000;
+var ROUND_TIME_REDUCEMENT = 500;
+
+var KEYBOARD_ROTATE = 0.05;
 
 var KEY_TO_MAT = [
 55,
@@ -319,9 +321,13 @@ $(function() {
         //curp.text((game.roundTimeLeft / 1000.0).toFixed(2));
         //curp.css('color', game.playerColors[game.currentPlayer]);
         
-        curp.removeClass();
-        curp.addClass('arrowp' + game.currentPlayer);
-        
+        var curpArrow = $('#currentPlayerArrow');
+        curpArrow.removeClass();
+        curpArrow.addClass('arrow arrowp' + game.currentPlayer);
+        // 25 = initial 25% arrow size
+        var width = 25 * game.roundTimeLeft / game.timePerRound;
+        curpArrow.css("width", width + "%");
+       
         game.updateScore(game.p0);
         game.updateScore(game.p1);
     }
@@ -331,14 +337,13 @@ $(function() {
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
         if(game.roundTimeLeft <= 0) {
             $("#beep_snd")[0].play();
-                                 
+            
             // next round
             if(game.currentPlayer == game.p1) {
                 game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT;
-                game.mesh.rotation.set(Math.PI * 0.25, 0.1, 0);
-            }
-            else {
-                game.mesh.rotation.set(Math.PI * 0.25, -0.1, 0);
+                game.mesh.rotation.set(Math.PI * 0.25, -KEYBOARD_ROTATE, 0);
+            } else {
+                game.mesh.rotation.set(Math.PI * 0.25, KEYBOARD_ROTATE, 0);
             }
             if(game.timePerRound <= 0) {
                 game.endGame();

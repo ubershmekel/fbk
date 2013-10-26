@@ -343,6 +343,10 @@ body {
     margin: auto;
 }
 
+#currentPlayer {
+    z-index: 10;
+}
+
 .gameState {
     display: none;
     padding: 20px;
@@ -412,9 +416,17 @@ button:active {
 
 
 /* left arrow */
+.arrow {
+    position: fixed;
+    top: 0;
+    width: 25%;
+    height: 100px;
+    z-index: -10;
+}
+
 .arrowp0 {
-    position: relative;
     background: #CE7898;
+    right: 50%;
 }
 .arrowp0:after {
     right: 100%;
@@ -435,8 +447,8 @@ button:active {
 
 /* right arrow */
 .arrowp1 {
-    position: relative;
     background: #98C5AB;
+    left: 50%;
 }
 .arrowp1:after {
     left: 100%;
