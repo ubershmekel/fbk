@@ -254,7 +254,7 @@ $(function() {
     
     captureVideo();
        
-    var game = {};
+    game = {};
     game.playerKeys = [{}, {}];
     game.taken = 't';
     game.p0 = 0;
@@ -335,10 +335,10 @@ $(function() {
             // next round
             if(game.currentPlayer == game.p1) {
                 game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT;
-                game.mesh.rotation.set(Math.PI * 0.25, 0.01, 0);
+                game.mesh.rotation.set(Math.PI * 0.25, 0.1, 0);
             }
             else {
-                game.mesh.rotation.set(Math.PI * 0.25, -0.01, 0);
+                game.mesh.rotation.set(Math.PI * 0.25, -0.1, 0);
             }
             if(game.timePerRound <= 0) {
                 game.endGame();
