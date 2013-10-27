@@ -408,6 +408,9 @@ $(function() {
     game.update = function() {
         var time = game.time();
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
+        if(game.roundTimeLeft < 0) {
+            game.roundTimeLeft = 0;
+        }
         if(game.roundTimeLeft <= 0) {
             game.currentPlayer = game.otherPlayer();
             game.newRound();
