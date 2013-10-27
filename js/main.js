@@ -156,7 +156,7 @@ function captureVideo(){
 
 var renderer, scene, camera;
 
-function init3D(game){
+function init3D(game, callback){
     // set the scene size
     var WIDTH = window.innerWidth,
         HEIGHT = window.innerHeight;
@@ -241,6 +241,8 @@ function init3D(game){
         game.mesh.rotation.set(Math.PI * 0.25, 0, 0);
         
         scene.add(game.mesh);
+        
+        callback();
 
     } );
     
@@ -619,10 +621,15 @@ $(function() {
     game.main = function() {
         game.loadAudio();
         game.hashifyAllowedKeys();
-        init3D(game);
         game.stateChange('intro');
-        $('.startButton').click(function(){game.newGame();});
-        game.registerKeys();
+        init3D(game, function(){
+            $('#firstBtn').text('Start!');
+            $('.startButton').click(function(){game.newGame();});
+            game.registerKeys();
+        });
+        
+        
+        
     }
    
     game.main();

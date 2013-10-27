@@ -314,6 +314,11 @@ body {
     overflow: hidden;
 }
 
+h1 {
+	font-family: 'Prosto One', cursive;
+	font-size: 40px;
+}
+
 a {
     color: #c7f;
 }
