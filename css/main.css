@@ -314,6 +314,14 @@ body {
     overflow: hidden;
 }
 
+a {
+    color: #c7f;
+}
+
+a:hover {
+    color: #cf7;
+}
+
 #p0keys {
     float: left
 }

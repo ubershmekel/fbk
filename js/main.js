@@ -3,8 +3,8 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
-var TIME_PER_ROUND = 3000;
-var ROUND_TIME_REDUCEMENT = 500;
+var TIME_PER_ROUND = 1800;
+var ROUND_TIME_REDUCEMENT = 200;
 
 var KEYBOARD_ROTATE = 0.05;
 
@@ -300,7 +300,7 @@ $(function() {
     
     game.removeKey = function(pid, key) {
         delete game.playerKeys[pid][key];
-        var elemName = game.pidToStr(pid) + 'key' + key;
+        //var elemName = game.pidToStr(pid) + 'key' + key;
         //$('#' + elemName).remove();
     }
 
@@ -313,8 +313,8 @@ $(function() {
         game.playerKeys[pid][key] = game.taken;
         game.playerScores[pid] += 1;
         
-        var elemName = game.pidToStr(pid) + 'key' + key;
-        /*var elem = $('<div/>', {
+        /*var elemName = game.pidToStr(pid) + 'key' + key;
+        var elem = $('<div/>', {
             text: key,
             id: elemName
             });
@@ -435,6 +435,7 @@ $(function() {
     
     game.newGame = function() {
         game.stateChange('play');
+        game.confirmToLeave(true);
         
         $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
         $('#gameover').hide();
@@ -453,6 +454,8 @@ $(function() {
     
     game.endGame = function() {
         //game.stateChange('gameover');
+        game.stateName = 'gameover'; // so keys can't be pressed but scores are still visible
+        game.confirmToLeave(false);
         $('#currentPlayer').hide();
         $('#gameover').show();
         clearInterval(game.intervalId);
@@ -488,9 +491,37 @@ $(function() {
         mediaElement.play();
     }
     
+    var confirmOnPageExit = function (e) {
+        // thanks to: http://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
+        // If we haven't been passed the event get the window.event
+        e = e || window.event;
+
+        var message = 'Whoever caused this dialog to pop up lost, sorry, you need to control your fingers...';
+
+        // For IE6-8 and Firefox prior to version 4
+        if (e) 
+        {
+            e.returnValue = message;
+        }
+
+        // For Chrome, Safari, IE8+ and Opera 12+
+        return message;
+    };
+    
+    game.confirmToLeave = function(needConfirm) {
+        if(needConfirm) {
+            // Turn it on - assign the function that returns the string
+            window.onbeforeunload = confirmOnPageExit;
+        } else {
+            // Turn it off - remove the function entirely
+            window.onbeforeunload = null;
+        }
+    }
+
+    
     game.playAudio = function(name) {
         var obj = game.audio[name];
-        obj.load();  // html5 bug-hack: http://stackoverflow.com/questions/9335577/html5-audio-sound-only-plays-once
+        obj.load(); // html5 hack: http://stackoverflow.com/questions/9335577/html5-audio-sound-only-plays-once
         obj.play();
     }
     
