@@ -513,7 +513,7 @@ $(function() {
             var image = new Image();
             image.src = canvas.toDataURL("image/png");
             game.images.push(image);
-        }, 500);
+        }, 1000);
     }
     
     game.startPlayback = function(){

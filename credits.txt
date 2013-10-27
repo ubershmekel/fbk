@@ -7,7 +7,10 @@ http://www.freesfx.co.uk/sfx/whoosh
 Favicon
 https://www.iconfinder.com/icons/40804/keyboard_icon
 
-3D Keyboard
+3D Keyboard Model by Yeminius
+http://www.turbosquid.com/FullPreview/Index.cfm/ID/554125
+
+Three.js
 http://threejs.org/
 
 DOM Manipulation+
@@ -15,5 +18,7 @@ http://jquery.com/
 
 Music
 https://soundcloud.com/royksopp/keyboard-milk
+
+
 
 
