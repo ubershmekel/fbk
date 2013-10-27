@@ -504,3 +504,11 @@ button:active {
     position: fixed;
     bottom: 0;
 }
+
+.allowedKeyColor {
+    color: rgb(128, 212, 223);
+}
+
+.redColor {
+    color: #f88;
+}
