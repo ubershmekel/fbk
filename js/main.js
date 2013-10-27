@@ -296,6 +296,7 @@ $(function() {
         //219]
     game.allowedKeyColor = [128/255, 212/255, 223/255];
     game.disallowedKeyColor = [0.4, 0.4, 0.4];
+    game.errorColor = [1, 0, 0];
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
@@ -441,6 +442,11 @@ $(function() {
             }
         }
     }
+    
+    game.blinkKey = function(key){
+        game.colorKey(key, game.errorColor);
+        setTimeout(function() { game.colorKey(key, game.disallowedKeyColor); }, 300);
+    }
         
     game.registerKeys = function() {
         $(window).keydown(function(e) {
@@ -456,6 +462,7 @@ $(function() {
             
             if(game.allowedKeysHash[key] != true) {
                 //game.playAudio('fart' + Math.ceil(Math.random() * 2));
+                game.blinkKey(key);
                 return;
             }
             
