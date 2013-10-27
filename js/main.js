@@ -702,6 +702,7 @@ $(function() {
         init3D(game, function(){
             $('#firstBtn').text('Start!');
             $('.startButton').click(function(){game.newGame();});
+            game.resetColorKeys();
             game.registerKeys();
         });
     }
