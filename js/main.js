@@ -459,7 +459,6 @@ $(function() {
                 return;
             }
             var key = e.which;
-            console.log(key);
             if(game.playerKeys[game.currentPlayer][key] == game.taken) {
                 // TODO: play wasted key sound
                 return;
