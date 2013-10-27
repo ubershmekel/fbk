@@ -413,9 +413,8 @@ $(function() {
     }
     
     game.resetColorKeys = function() {
-        for(var i = 0; i < KEY_TO_MAT.length; i++) {
-            // TODO: maybe there's a smarter way to do this without double look up?
-            game.turnOffColor(KEY_TO_MAT[i]);
+        for (var i = 0; i < game.mesh.material.materials.length; i++) {
+            game.mesh.material.materials[i].color.setRGB(1,1,1);
         }
     }
         
@@ -483,7 +482,9 @@ $(function() {
         //game.timePerRound = TIME_PER_ROUND;
         game.currentRound = -1;
         game.countDown();
-        game.stateChange('play');
+        if (game.stateDiv != undefined) {
+            game.stateDiv.hide();
+        }
     }
     
     game.countDown = function() {
@@ -491,6 +492,7 @@ $(function() {
             game.newRound();
             game.startTime = game.time();
             game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
+            game.stateChange('play');
         }
         
         var overlay = $('#countdown');
