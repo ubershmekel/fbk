@@ -286,6 +286,22 @@ $(function() {
     game.playerColorsRGB[game.p0] = [206/255, 120/255, 152/255];
     game.playerColorsRGB[game.p1] = [152/255, 197/255, 171/255];
     game.MUSIC_VOLUME = 35; // shouldn't be so loud that you can't hear the whoosh
+    game.allowedKeys = [87,
+        69,
+        82,
+        84,
+        89,
+        85,
+        73,
+        79,
+        76,
+        75,
+        74,
+        72,
+        71,
+        70,
+        68,
+        83]
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
@@ -407,6 +423,11 @@ $(function() {
             //console.log(key);
             if(game.playerKeys[game.currentPlayer][key] == game.taken) {
                 // TODO: play wasted key sound
+                return;
+            }
+            
+            if(game.allowedKeysHash[key] != true) {
+                game.playAudio('fart' + Math.ceil(Math.random() * 2));
                 return;
             }
             
@@ -559,8 +580,17 @@ $(function() {
         });
     }
     
+    game.hashifyAllowedKeys = function() {
+        game.allowedKeysHash = {};
+        for(var i = 0; i < game.allowedKeys.length; i++) {
+            var key = game.allowedKeys[i];
+            game.allowedKeysHash[key] = true;
+        }
+    }
+    
     game.main = function() {
         game.loadAudio();
+        game.hashifyAllowedKeys();
         init3D(game);
         game.stateChange('intro');
         $('.startButton').click(function(){game.newGame();});
