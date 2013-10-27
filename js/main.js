@@ -268,7 +268,7 @@ function render() {
 
 $(function() {
     
-    captureVideo();
+    //captureVideo();
        
     game = {};
     game.playerKeys = [{}, {}];
@@ -516,10 +516,10 @@ $(function() {
                    "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
         $('#results').html(html);
         
-        var mediaElement = $("video")[0];
-        mediaElement.pause(); 
-        mediaElement.currentTime = 0;
-        mediaElement.play();
+        // var mediaElement = $("video")[0];
+        // mediaElement.pause(); 
+        // mediaElement.currentTime = 0;
+        // mediaElement.play();
     }
     
     var confirmOnPageExit = function (e) {
