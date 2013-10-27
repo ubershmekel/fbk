@@ -291,7 +291,8 @@ $(function() {
     game.playerColorsRGB[game.p0] = [206/255, 120/255, 152/255];
     game.playerColorsRGB[game.p1] = [152/255, 197/255, 171/255];
     game.MUSIC_VOLUME = 35; // shouldn't be so loud that you can't hear the whoosh
-    game.allowedKeys = [87,
+    game.allowedKeys = [
+        87,
         69,
         82,
         84,
@@ -306,7 +307,19 @@ $(function() {
         71,
         70,
         68,
-        83]
+        83,
+        86,
+        66,
+        78,
+        77,
+        80,
+        186,
+        32,
+        67,
+        188,
+        219]
+    game.allowedKeyColor = [128/255, 212/255, 223/255];
+    game.disallowedKeyColor = [0.4, 0.4, 0.4];
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
@@ -408,13 +421,18 @@ $(function() {
         game.colorKey(key, game.playerColorsRGB[player]);
     }
     
-    game.turnOffColor = function(key){
-        game.colorKey(key, [1,1,1]);
-    }
+    // game.turnOffColor = function(key){
+        // game.colorKey(key, [1,1,1]);
+    // }
     
     game.resetColorKeys = function() {
         for (var i = 0; i < game.mesh.material.materials.length; i++) {
-            game.mesh.material.materials[i].color.setRGB(1,1,1);
+            if (game.allowedKeys.indexOf(KEY_TO_MAT[i]) > -1){
+                game.mesh.material.materials[i].color.setRGB(game.allowedKeyColor[0], game.allowedKeyColor[1], game.allowedKeyColor[2]);
+            }
+            else{
+                game.mesh.material.materials[i].color.setRGB(game.disallowedKeyColor[0], game.disallowedKeyColor[1], game.disallowedKeyColor[2]);
+            }
         }
     }
         
@@ -431,7 +449,7 @@ $(function() {
             }
             
             if(game.allowedKeysHash[key] != true) {
-                game.playAudio('fart' + Math.ceil(Math.random() * 2));
+                //game.playAudio('fart' + Math.ceil(Math.random() * 2));
                 return;
             }
             
@@ -453,7 +471,7 @@ $(function() {
             var key = e.which;
             
             game.removeKey(game.currentPlayer, key);
-            game.turnOffColor(key);
+            //game.turnOffColor(key);
         });
     }
     
@@ -471,7 +489,6 @@ $(function() {
         
         $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
         $('#gameover').hide();
-        
         
         game.resetColorKeys();
         game.playerKeys = [{}, {}];

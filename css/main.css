@@ -312,11 +312,17 @@ textarea {
 body {
     /* no scroll bars please */
     overflow: hidden;
+    font-family: 'Prosto One', cursive;
 }
 
 h1 {
-	font-family: 'Prosto One', cursive;
 	font-size: 40px;
+}
+h2 {
+	font-size: 28px;
+}
+h3 {
+	font-size: 22px;
 }
 
 a {
