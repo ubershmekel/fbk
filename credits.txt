@@ -1,2 +1,19 @@
+Top Less Productions
+Break Keyboards With Friends
+
+Whoosh sound
 http://www.freesfx.co.uk/sfx/whoosh
+
+Favicon
+https://www.iconfinder.com/icons/40804/keyboard_icon
+
+3D Keyboard
+http://threejs.org/
+
+DOM Manipulation+
+http://jquery.com/
+
+Music
+https://soundcloud.com/royksopp/keyboard-milk
+
 

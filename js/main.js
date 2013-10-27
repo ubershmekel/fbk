@@ -289,11 +289,11 @@ $(function() {
         78,
         77,
         80,
-        186,
+        //186,
         32,
-        67,
-        188,
-        219]
+        67]
+        //188,
+        //219]
     game.allowedKeyColor = [128/255, 212/255, 223/255];
     game.disallowedKeyColor = [0.4, 0.4, 0.4];
     
@@ -346,6 +346,10 @@ $(function() {
         };
 
         // Not showing vendor prefixes.
+        if(navigator.webkitGetUserMedia == undefined) {
+            // firefox fix
+            return;
+        }
         navigator.webkitGetUserMedia({video: true}, function(localMediaStream) {
         
             game.videoEnabled = true;
@@ -444,7 +448,7 @@ $(function() {
                 return;
             }
             var key = e.which;
-            //console.log(key);
+            console.log(key);
             if(game.playerKeys[game.currentPlayer][key] == game.taken) {
                 // TODO: play wasted key sound
                 return;
