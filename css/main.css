@@ -355,7 +355,7 @@ a:hover {
     z-index: 10;
 }
 
-.gameState {
+.gameState, .overlay {
     display: none;
     padding: 20px;
     text-align: center;
@@ -363,6 +363,14 @@ a:hover {
     top: 0;
     width: 100%;
     height: 100%;
+}
+
+#countdown {
+    font-size: 5em; /* won't be used */
+    font-weight: bold;
+    color: #c7f;
+    z-index: 9999;
+    top: 25%;
 }
 
 #gameover, #intro {

@@ -10,6 +10,9 @@ var ROUNDS_DURATION = [2000, 1500, 1000, 800, 600, 600, 600, 600];
 
 var KEYBOARD_ROTATE = 0.05;
 
+// KEY_TO_MAT
+// The index of the array is the material in the 3D model
+// the value is keyboard key code.
 var KEY_TO_MAT = [
 55,
 56,
@@ -469,6 +472,7 @@ $(function() {
         $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
         $('#gameover').hide();
         
+        
         game.resetColorKeys();
         game.playerKeys = [{}, {}];
         game.playerScores = [0, 0];
@@ -477,9 +481,32 @@ $(function() {
         game.keyHolderElem(game.p1).empty();
         //game.timePerRound = TIME_PER_ROUND;
         game.currentRound = -1;
-        game.newRound();
-        game.startTime = game.time();
-        game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
+        game.countDown();
+    }
+    
+    game.countDown = function() {
+        var doneAnimation = function() {
+            game.newRound();
+            game.startTime = game.time();
+            game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
+        }
+        
+        var overlay = $('#countdown');
+        var winHeight = $( window ).height();
+        overlay.css('font-size', (winHeight / 2) + 'px');
+        var counter = 4;
+        var queueAnim = function() {
+            counter -= 1;
+            if (counter == 0) {
+                doneAnimation();
+                return;
+            }
+            overlay.text(counter);
+            overlay.show();
+            overlay.fadeOut({duration: 1000, complete: queueAnim, easing: 'linear'})
+        }
+        
+        queueAnim();
     }
     
     game.endGame = function() {
@@ -581,6 +608,7 @@ $(function() {
     }
     
     game.hashifyAllowedKeys = function() {
+        // optimize the lookups by putting them in an object (vs list);
         game.allowedKeysHash = {};
         for(var i = 0; i < game.allowedKeys.length; i++) {
             var key = game.allowedKeys[i];
