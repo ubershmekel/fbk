@@ -573,7 +573,7 @@ $(function() {
             if(obj.relativePosition > 0.99) {
                 game.music.seekTo(0);
             }
-            if(isFirstTime) {
+            if(isFirstTime && (obj.relativePosition > 0)) {
                 game.music.setVolume(game.MUSIC_VOLUME);
                 isFirstTime = false;
             }
