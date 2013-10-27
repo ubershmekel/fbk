@@ -374,10 +374,10 @@ $(function() {
             if(game.currentRound == ROUNDS_DURATION.length) {
                 game.endGame();
             }
-            game.mesh.rotation.set(Math.PI * 0.25, KEYBOARD_ROTATE, 0);
+            game.mesh.rotation.set(Math.PI * 0.25, -KEYBOARD_ROTATE, 0);
         } else {
             // same round, next player
-            game.mesh.rotation.set(Math.PI * 0.25, -KEYBOARD_ROTATE, 0);
+            game.mesh.rotation.set(Math.PI * 0.25, KEYBOARD_ROTATE, 0);
         }
         game.timePerRound = ROUNDS_DURATION[game.currentRound];
         game.roundStartTime = game.time();
