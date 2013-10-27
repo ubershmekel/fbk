@@ -348,7 +348,7 @@ $(function() {
         var time = game.time();
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
         if(game.roundTimeLeft <= 0) {
-            $("#beep_snd")[0].play();
+            game.playAudio('woosh' + Math.ceil(Math.random() * 3));
             
             // next round
             if(game.currentPlayer == game.p1) {
@@ -435,6 +435,10 @@ $(function() {
     
     game.newGame = function() {
         game.stateChange('play');
+        
+        $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
+        $('#gameover').hide();
+        
         game.resetColorKeys();
         game.playerKeys = [{}, {}];
         game.playerScores = [0, 0];
@@ -448,7 +452,9 @@ $(function() {
     }
     
     game.endGame = function() {
-        game.stateChange('gameover');
+        //game.stateChange('gameover');
+        $('#currentPlayer').hide();
+        $('#gameover').show();
         clearInterval(game.intervalId);
         game.intervalId = undefined;
         
@@ -473,7 +479,7 @@ $(function() {
         var strokesPerSecond = (game.playerScores[0] + game.playerScores[1]) / timePlayed;
         strokesPerSecond = Math.round(strokesPerSecond * 10) / 10;
         var text = winnerText + '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
-                   '<p>Scores: ' + game.playerScores.join(', ') + "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
+                   "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
         $('#results').html(text);
         
         var mediaElement = $("video")[0];
@@ -482,7 +488,25 @@ $(function() {
         mediaElement.play();
     }
     
+    game.playAudio = function(name) {
+        var obj = game.audio[name];
+        obj.load();  // html5 bug-hack: http://stackoverflow.com/questions/9335577/html5-audio-sound-only-plays-once
+        obj.play();
+    }
+    
+    game.loadAudio = function() {
+        var sounds = $("audio");
+        game.audio = {};
+        sounds.load(); // download sounds
+        
+        // arrange them
+        for(var i = 0; i < sounds.length; i++) {
+            game.audio[sounds[i].id] = sounds[i];
+        }
+    }
+    
     game.main = function() {
+        game.loadAudio();
         init3D(game);
         game.stateChange('intro');
         $('.startButton').click(function(){game.newGame();});
