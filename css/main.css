@@ -341,6 +341,12 @@ a:hover {
     float: right;
 }
     
+#videoMsg {
+    position: absolute;
+    top: 0;
+    font-size: 22px;
+}
+    
 .leftStatus {
     position: fixed;
     left: 0;

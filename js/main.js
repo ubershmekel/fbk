@@ -3,9 +3,6 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
-//var TIME_PER_ROUND = 2000;
-//var ROUND_TIME_REDUCEMENT = 200;
-
 var ROUNDS_DURATION = [2000, 1500, 1000, 800, 600, 600, 600, 600];
 
 var KEYBOARD_ROTATE = 0.05;
@@ -134,25 +131,6 @@ if ( ! Detector.webgl ) {
 
 }
 
-var x;
-function captureVideo(){
-    var onFailSoHard = function(e) {
-    console.log('Reeeejected!', e);
-  };
-
-  // Not showing vendor prefixes.
-  navigator.webkitGetUserMedia({video: true}, function(localMediaStream) {
-    var video = document.querySelector('video');
-    x = localMediaStream;
-    video.src = window.URL.createObjectURL(localMediaStream);
-
-    // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-    // See crbug.com/110938.
-    video.onloadedmetadata = function(e) {
-      // Ready to go. Do some stuff.
-    };
-  }, onFailSoHard);
-}
 
 var renderer, scene, camera;
 
@@ -272,9 +250,7 @@ function render() {
 }
 
 $(function() {
-    
-    //captureVideo();
-       
+
     game = {};
     game.playerKeys = [{}, {}];
     game.taken = 't';
@@ -359,6 +335,32 @@ $(function() {
         
         game.keyHolderElem(pid).append(elem);*/
     }
+    
+    game.captureVideo = function(){
+    
+        game.videoEnabled = false;
+    
+        var onFailSoHard = function(e) {
+            game.videoEnabled = false;
+            console.log('rejected');
+        };
+
+        // Not showing vendor prefixes.
+        navigator.webkitGetUserMedia({video: true}, function(localMediaStream) {
+        
+            game.videoEnabled = true;
+            
+            var video = document.querySelector('video');
+            video.src = window.URL.createObjectURL(localMediaStream);
+
+            // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+            // See crbug.com/110938.
+            video.onloadedmetadata = function(e) {
+                // Ready to go. Do some stuff.
+            };
+        }, onFailSoHard);
+    }
+
 
     game.updateScore = function(pid) {
         $('#p' + pid + 'score').text(game.playerScores[pid]);
@@ -484,8 +486,47 @@ $(function() {
         game.stateDiv.show();
     }
     
+    game.startRecording = function(){
+        if (!game.videoEnabled) return;
+        
+        clearInterval(game.captureInterval);
+        game.images = [];
+    
+        game.captureInterval = setInterval(function(){
+            var canvas = $("#canvas")[0];
+            canvas.getContext("2d").drawImage($("video")[0], 0, 0, 640, 480);
+            var image = new Image();
+            image.src = canvas.toDataURL("image/png");
+            game.images.push(image);
+        }, 500);
+    }
+    
+    game.startPlayback = function(){
+        
+        clearInterval(game.captureInterval);
+        
+        if (!game.videoEnabled || !game.images || game.images.length < 1){
+            $("#captureDiv").hide();
+            return;
+        }
+        $("#captureDiv").show();
+        
+        var vs = document.querySelector('#videoStream');
+        var screenHeight = Math.min(window.innerHeight - vs.offsetTop, 480);
+        $("#videoStream").css('height', screenHeight);
+        $("#videoStream").css('width', screenHeight * 4 / 3);
+        
+        game.imageShowing = 0;
+        game.captureInterval = setInterval(function(){
+            if (game.imageShowing >= game.images.length) game.imageShowing = 0;
+            $("#videoStream")[0].src = game.images[game.imageShowing++].src;
+        }, 500);
+    }
+    
     game.newGame = function() {
         game.confirmToLeave(true);
+        
+        game.startRecording();
         
         $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
         $('#gameover').hide();
@@ -531,6 +572,7 @@ $(function() {
     }
     
     game.endGame = function() {
+    
         //game.stateChange('gameover');
         game.stateName = 'gameover'; // so keys can't be pressed but scores are still visible
         game.confirmToLeave(false);
@@ -563,11 +605,9 @@ $(function() {
         var html = '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
                    "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
         $('#results').html(html);
+
+        game.startPlayback();
         
-        // var mediaElement = $("video")[0];
-        // mediaElement.pause(); 
-        // mediaElement.currentTime = 0;
-        // mediaElement.play();
     }
     
     var confirmOnPageExit = function (e) {
@@ -638,6 +678,7 @@ $(function() {
     }
     
     game.main = function() {
+        game.captureVideo();
         game.loadAudio();
         game.hashifyAllowedKeys();
         game.stateChange('intro');
@@ -646,9 +687,6 @@ $(function() {
             $('.startButton').click(function(){game.newGame();});
             game.registerKeys();
         });
-        
-        
-        
     }
    
     game.main();

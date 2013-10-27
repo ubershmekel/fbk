@@ -21,15 +21,11 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        
+        <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+        <video autoplay style="display: none;"></video>
 
-        
-        
         <div id="container"></div>
-        
-        
-        
-        
-        
         
         <!-- Add your site or application content here -->
         
@@ -38,14 +34,14 @@
             <p>2 players battle it out to conquer the keyboard</p>
             <strong>DO NOT PLAY THIS ALONE, CLOSE THE TAB, GET A FRIEND</strong>
             <p>When it's your turn, hit as many keys as possible to conquer them.</p>
-            <p>Steal your opponents territory, and avoid helping him when it's his turn (there's no pause between turns...)</p>
+            <p>Steal your opponents territory, and avoid helping him when it's his turn (there's no pause between turns...)</p> 
+            <p>ONLY CLICK THE BLUE KEYS, THEY ARE THE ONLY ONES THAT ARE WORTH POINTS</p>
             <p>The game doesn't enforce this but <strong>YOU LOSE</strong> if you stop the game's flow - hit the windows key, backspace, F5, Ctrl-F, Ctrl-R, Ctrl-U, Ctrl-O, Ctrl-S, etc.</p>
             <p><a href="https://github.com/ubershmekel/fbk">source on github</a> by Yuval & Yuval</p>
             <button id="firstBtn" class="startButton" autofocus>Loading...</button>
+            
+            <div id="videoMsg">Please allow video capture if you have a webcam!</div>
         </div>
-        
-        
-        
         
         <div id="play" class="gameState">
             <div class="leftStatus">
@@ -77,8 +73,10 @@
             <div id="results">
             </div>
             <button class="startButton">Start Over</button>
-            <h3>And that's how you behaved:</h3>
-            <video></video>
+            <div id="captureDiv">
+                <h3>And that's how you behaved:</h3>
+                <img id="videoStream" width="640" height="480"/>
+            </div>
         </div>
         
         
