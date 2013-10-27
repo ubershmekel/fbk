@@ -466,7 +466,6 @@ $(function() {
     }
     
     game.newGame = function() {
-        game.stateChange('play');
         game.confirmToLeave(true);
         
         $('#currentPlayer').show(); //hacks, we can probably implement a "pop state" thing
@@ -482,6 +481,7 @@ $(function() {
         //game.timePerRound = TIME_PER_ROUND;
         game.currentRound = -1;
         game.countDown();
+        game.stateChange('play');
     }
     
     game.countDown = function() {
