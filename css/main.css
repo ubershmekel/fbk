@@ -474,3 +474,8 @@ button:active {
     top: 50%;
     margin-top: -30px;
 }
+
+#musicIframe {
+    position: fixed;
+    bottom: 0;
+}

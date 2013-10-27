@@ -3,8 +3,10 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
-var TIME_PER_ROUND = 1800;
-var ROUND_TIME_REDUCEMENT = 200;
+//var TIME_PER_ROUND = 2000;
+//var ROUND_TIME_REDUCEMENT = 200;
+
+var ROUNDS_DURATION = [2000, 1500, 1000, 800, 600, 600, 600, 600];
 
 var KEYBOARD_ROTATE = 0.05;
 
@@ -283,6 +285,7 @@ $(function() {
     game.playerColorsRGB = {};
     game.playerColorsRGB[game.p0] = [206/255, 120/255, 152/255];
     game.playerColorsRGB[game.p1] = [152/255, 197/255, 171/255];
+    game.MUSIC_VOLUME = 35; // shouldn't be so loud that you can't hear the whoosh
     
     game.play_mode = PLAY_MODE_CLICK_TO_CAPTURE;
     
@@ -344,24 +347,29 @@ $(function() {
         game.updateScore(game.p1);
     }
     
+    game.newRound = function() {
+        game.playAudio('woosh' + Math.ceil(Math.random() * 3));
+        if(game.currentPlayer == game.p0) {
+            // next round
+            game.currentRound += 1;
+            if(game.currentRound == ROUNDS_DURATION.length) {
+                game.endGame();
+            }
+            game.mesh.rotation.set(Math.PI * 0.25, KEYBOARD_ROTATE, 0);
+        } else {
+            // same round, next player
+            game.mesh.rotation.set(Math.PI * 0.25, -KEYBOARD_ROTATE, 0);
+        }
+        game.timePerRound = ROUNDS_DURATION[game.currentRound];
+        game.roundStartTime = game.time();
+    }
+    
     game.update = function() {
         var time = game.time();
         game.roundTimeLeft = game.timePerRound + game.roundStartTime - time;
         if(game.roundTimeLeft <= 0) {
-            game.playAudio('woosh' + Math.ceil(Math.random() * 3));
-            
-            // next round
-            if(game.currentPlayer == game.p1) {
-                game.timePerRound = game.timePerRound - ROUND_TIME_REDUCEMENT;
-                game.mesh.rotation.set(Math.PI * 0.25, -KEYBOARD_ROTATE, 0);
-            } else {
-                game.mesh.rotation.set(Math.PI * 0.25, KEYBOARD_ROTATE, 0);
-            }
-            if(game.timePerRound <= 0) {
-                game.endGame();
-            }
-            game.roundStartTime = time;
             game.currentPlayer = game.otherPlayer();
+            game.newRound();
         }
         
         game.updateViz();
@@ -446,8 +454,9 @@ $(function() {
         game.currentPlayer = game.p0;
         game.keyHolderElem(game.p0).empty();
         game.keyHolderElem(game.p1).empty();
-        game.timePerRound = TIME_PER_ROUND;
-        game.roundStartTime = game.time();
+        //game.timePerRound = TIME_PER_ROUND;
+        game.currentRound = -1;
+        game.newRound();
         game.startTime = game.time();
         game.intervalId = setInterval(game.update, 30); // 30 fps is about 30 ms delay
     }
@@ -472,18 +481,19 @@ $(function() {
         }
         
         if(winnerId == undefined) {
-            winnerText = '<h3>A Tie</h3>';
+            winnerText = 'A Tie';
             $('#gameover').css('color', '#fff');
         } else {
-            winnerText = '<h3>' + game.playerNames[winnerId] + ' won!</h3>';
+            winnerText = game.playerNames[winnerId] + ' won!';
             $('#gameover').css('color', game.playerColors[winnerId]);
         }
         
         var strokesPerSecond = (game.playerScores[0] + game.playerScores[1]) / timePlayed;
         strokesPerSecond = Math.round(strokesPerSecond * 10) / 10;
-        var text = winnerText + '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
+        $('#playerWon').text(winnerText);
+        var html = '<p>Time played: ' + timePlayed + ' seconds ' + '</p>' +
                    "</p><p>Speed: " + strokesPerSecond + " keys per second.</p>";
-        $('#results').html(text);
+        $('#results').html(html);
         
         var mediaElement = $("video")[0];
         mediaElement.pause(); 
@@ -534,6 +544,19 @@ $(function() {
         for(var i = 0; i < sounds.length; i++) {
             game.audio[sounds[i].id] = sounds[i];
         }
+        
+        // music
+        game.music = SC.Widget('musicIframe');
+        var isFirstTime = true;
+        game.music.bind(SC.Widget.Events.PLAY_PROGRESS, function(obj) {
+            if(obj.relativePosition > 0.99) {
+                game.music.seekTo(0);
+            }
+            if(isFirstTime) {
+                game.music.setVolume(game.MUSIC_VOLUME);
+                isFirstTime = false;
+            }
+        });
     }
     
     game.main = function() {
