@@ -6,6 +6,8 @@ var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 var ROUNDS_DURATION = [1000, 1000, 1000, 1000, 600, 600, 600, 600];
 
 var KEYBOARD_ROTATE = 0.05;
+var WEBCAM_CAPTURE_INTERVAL = 1000;
+var WEBCAM_SHOW_INTERVAL = 250;
 
 // KEY_TO_MAT
 // The index of the array is the material in the 3D model
@@ -513,7 +515,7 @@ $(function() {
             var image = new Image();
             image.src = canvas.toDataURL("image/png");
             game.images.push(image);
-        }, 1000);
+        }, WEBCAM_CAPTURE_INTERVAL);
     }
     
     game.startPlayback = function(){
@@ -535,7 +537,7 @@ $(function() {
         game.captureInterval = setInterval(function(){
             if (game.imageShowing >= game.images.length) game.imageShowing = 0;
             $("#videoStream")[0].src = game.images[game.imageShowing++].src;
-        }, 500);
+        }, WEBCAM_SHOW_INTERVAL);
     }
     
     game.newGame = function() {
