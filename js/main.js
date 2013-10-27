@@ -3,7 +3,7 @@
 var PLAY_MODE_CLICK_TO_CAPTURE = 0;
 var PLAY_MODE_HOLD_TO_CAPTURE = 1;
 
-var ROUNDS_DURATION = [2000, 1500, 1000, 800, 600, 600, 600, 600];
+var ROUNDS_DURATION = [1000, 1000, 1000, 1000, 600, 600, 600, 600];
 
 var KEYBOARD_ROTATE = 0.05;
 
@@ -462,6 +462,7 @@ $(function() {
             
             if(game.allowedKeysHash[key] != true) {
                 //game.playAudio('fart' + Math.ceil(Math.random() * 2));
+                game.playAudio('beep');
                 game.blinkKey(key);
                 return;
             }
